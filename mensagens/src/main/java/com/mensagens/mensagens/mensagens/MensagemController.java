@@ -29,11 +29,11 @@ public class MensagemController {
     public MensagemArquivo criaMensagemArquivo(@RequestBody Map<String, Object> json) {
         return mensagemService.salvaMensagemArquivo(json.get("id_user").toString(), json.get("texto").toString());
     }
-    @GetMapping("/{id}")
+    @GetMapping("mensagem/{id}")
     public Mensagem getMensagemById(@PathVariable String id) {
         return mensagemService.getMensagemById(id);
     }
-    @GetMapping("/{id}/user")
+    @GetMapping("mensagem/{id}/user")
     public List<Mensagem> getMensagens_user(@PathVariable String id) {
         return mensagemService.getMensagens_user(id);
     }
