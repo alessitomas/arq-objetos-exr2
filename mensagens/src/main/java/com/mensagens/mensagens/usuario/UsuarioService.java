@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -11,14 +12,19 @@ import org.springframework.stereotype.Service;
 public class UsuarioService {
     private List<Usuario> usuarios = new ArrayList<>();
 
-    public Usuario salvarUsuario(Usuario usuario) {
-        usuario.setId(UUID.randomUUID().toString());
-        usuarios.add(usuario);
-        return usuario;
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
+    public Usuario saveUser(Usuario user) {
+        user.setIdentifier(UUID.randomUUID().toString());
+        return usuarioRepository.save(user);
     }
+
     public List<Usuario> getUsuarios() {
-        return usuarios;
+        return usuarioRepository.findAll();
     }
+  
+    
     public Usuario getUsuario(String nome) {
         for (Usuario usuario : usuarios) {
             if (usuario.getNome().equals(nome)) {
@@ -29,11 +35,6 @@ public class UsuarioService {
     }
 
     public Usuario buscaUsuario(String id) {
-        for (Usuario usuario : usuarios) {
-            if (usuario.getId().equals(id)) {
-                return usuario;
-            }
-        }
-        return null;
+        return usuarioRepository.findByIdentifier(id);
     }
 }

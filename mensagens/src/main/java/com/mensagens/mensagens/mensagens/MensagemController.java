@@ -22,12 +22,12 @@ public class MensagemController {
         return mensagemService.getMensagens();
     }
     @PostMapping("/mensagemText")
-    public MensagemTexto criaMensagemText(@RequestBody Map<String, Object> json) {
-        return mensagemService.salvaMensagemText(json.get("id_user").toString(), json.get("texto").toString());
+    public MensagemTexto criaMensagemText(@RequestBody MensagemTexto mensagemTexto) {
+        return mensagemService.salvaMensagemText(mensagemTexto);
     }
     @PostMapping("/mensagemArquivo")
-    public MensagemArquivo criaMensagemArquivo(@RequestBody Map<String, Object> json) {
-        return mensagemService.salvaMensagemArquivo(json.get("id_user").toString(), json.get("texto").toString());
+    public MensagemArquivo criaMensagemArquivo(@RequestBody MensagemArquivo mensagemArquivo) {
+        return mensagemService.salvaMensagemArquivo(mensagemArquivo);
     }
     @GetMapping("/mensagem/{id}")
     public Mensagem getMensagemById(@PathVariable String id) {

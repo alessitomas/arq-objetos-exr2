@@ -10,61 +10,43 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mensagens.mensagens.usuario.Usuario;
+import com.mensagens.mensagens.usuario.UsuarioRepository;
+
 
 @Service
 public class MensagemService {
     private List<Mensagem> mensagens = new ArrayList<>();
+    
     @Autowired
     private UsuarioService usuarioService;
-    
+    @Autowired
+    private MensagemRepository mensagemRepository;
+
     public List<Mensagem> getMensagens() {
-        return mensagens;
+        return mensagemRepository.findAll();
     }
 
-    public MensagemTexto salvaMensagemText(String id_user, String texto) {
-        Usuario usuario =usuarioService.buscaUsuario(id_user);
-        if (usuario != null) {
-            MensagemTexto mensagem = new MensagemTexto(usuario, texto);
-            mensagem.setId(UUID.randomUUID().toString());
-            mensagens.add(mensagem);
-            return mensagem;
-        } else{
-            return null;
-        }
-
+    public MensagemTexto salvaMensagemText(MensagemTexto mensagemTexto ) {
+        mensagemTexto.setIdentifier(UUID.randomUUID().toString());
+        Usuario user = usuarioService.buscaUsuario(mensagemTexto.getUsuario().getIdentifier());
+        mensagemTexto.setUsuario(user);
+        return mensagemRepository.save(mensagemTexto);
     }
 
-    public MensagemArquivo salvaMensagemArquivo(String id_user, String texto) {
-        Usuario usuario =usuarioService.buscaUsuario(id_user);
-        if (usuario != null) {
-            MensagemArquivo mensagem = new MensagemArquivo(usuario, texto);
-            mensagem.setId(UUID.randomUUID().toString());
-            mensagens.add(mensagem);
-            return mensagem;
-        } else{
-            return null;
-        }
 
+    public MensagemArquivo salvaMensagemArquivo(MensagemArquivo mensagemArquivo) {
+        mensagemArquivo.setIdentifier(UUID.randomUUID().toString());
+        Usuario user = usuarioService.buscaUsuario(mensagemArquivo.getUsuario().getIdentifier());
+        mensagemArquivo.setUsuario(user);
+        return mensagemRepository.save(mensagemArquivo);
     }
 
     public Mensagem getMensagemById(String id) {
-        for (Mensagem mensagem : mensagens) {
-            if (mensagem.getId().equals(id)) {
-                return mensagem;
-            }
-        }
-        return null;
+       return mensagemRepository.findByIdentifier(id);
     }
 
     public List<Mensagem> getMensagens_user(String id) {
-        List<Mensagem> mensagens_user = new ArrayList<>();
-        for (Mensagem mensagem : mensagens) {
-            if (mensagem.getUsuario().getId().equals(id)) {
-                mensagens_user.add(mensagem);
-            }
-        }
-        return mensagens_user;
-    }
-
-    
+        Usuario usuario = usuarioService.buscaUsuario(id);
+        return mensagemRepository.findByUsuario(usuario);   
+    } 
 }
